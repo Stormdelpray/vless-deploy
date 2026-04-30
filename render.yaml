@@ -1,0 +1,61 @@
+# Render Blueprint: multi-region VLESS over WebSocket + TLS (terminated by Render).
+# Free-tier web services spin down after ~15 min of inactivity. For always-on,
+# upgrade any service to the Starter plan ($7/mo each).
+#
+# Usage:
+#   1. Push this repo to GitHub.
+#   2. In Render, click "New > Blueprint" and point it at this repo.
+#   3. Render reads this file and creates all services in one click.
+
+services:
+  - type: web
+    name: vless-us-west
+    runtime: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: VLESS_UUID
+        sync: false        # set manually in dashboard (same value for all regions)
+      - key: WS_PATH
+        value: /ws
+    healthCheckPath: /
+
+  - type: web
+    name: vless-us-east
+    runtime: docker
+    region: ohio
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: VLESS_UUID
+        sync: false
+      - key: WS_PATH
+        value: /ws
+    healthCheckPath: /
+
+  - type: web
+    name: vless-eu
+    runtime: docker
+    region: frankfurt
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: VLESS_UUID
+        sync: false
+      - key: WS_PATH
+        value: /ws
+    healthCheckPath: /
+
+  - type: web
+    name: vless-asia
+    runtime: docker
+    region: singapore
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: VLESS_UUID
+        sync: false
+      - key: WS_PATH
+        value: /ws
+    healthCheckPath: /
